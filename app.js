@@ -1,11 +1,19 @@
 // Core Module
+
 const path = require('path');
+//The path module provides utilities to work with file and directory paths
 
 // External Module
+
 const express = require('express');
 const multer = require('multer');
+//used for handling file uploads (like images, PDFs)
 const session  = require('express-session'); 
+//helps you store user data across requests,every request is new. Sessions help you remember users
+
 const MongoDBStore = require('connect-mongodb-session')(session);
+//connects your sessions (created by express-session) to MongoDB, so they are saved in the database instead of memory
+
 const DB_PATH = "mongodb+srv://root:root@completecoding.pxuvpxm.mongodb.net/airbnb?retryWrites=true&w=majority&appName=CompleteCoding";
 const { default: mongoose } = require('mongoose');
 
@@ -16,16 +24,13 @@ const authRouter = require("./routes/authRouter")
 const hostRouter = require("./routes/hostRouter")
 const rootDir = require("./utils/pathUtil");
 const errorsController = require("./controllers/errors");
-const { Result } = require('postcss');
-const { error } = require('console');
-
 
 const app = express();
 
-app.set('view engine', 'ejs'); 
-app.set('views', 'views');
+app.set('view engine', 'ejs'); //using EJS as my template engine
+app.set('views', 'views');//Look for my EJS template files inside the views folder
 
-const store = new MongoDBStore({
+const store = new MongoDBStore({//Store session data in MongoDB, inside the sessions collection
   uri:DB_PATH,
   collection:'sessions'
 })
@@ -38,7 +43,8 @@ const characters = 'abcdefghijklmnopqrstuvwxyz';
   }
   return result;
 }
-const storage  =multer.diskStorage({
+
+const storage  = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "uploads/");
   },
@@ -66,12 +72,14 @@ app.use("/uploads",express.static(path.join(rootDir,'uploads')));
 app.use("/host/uploads/",express.static(path.join(rootDir,'uploads')));
 
 
-app.use(session({
+app.use(session(
+  {
 secret:"learning backend",
 resave:false,
 saveUninitialized:true,
 store:store,
-}));
+}
+));
 
 app.use((req,res,next)=>{
   console.log("Logged in?", req.session.isLoggedIn);
@@ -81,6 +89,7 @@ app.use((req,res,next)=>{
 
 app.use(storeRouter);
 app.use(authRouter);
+
 app.use("/host", (req,res,next)=>{
 if(req.isLoggedIn){
    next();
@@ -90,7 +99,6 @@ else{
 }
 });
 app.use("/host", hostRouter);
-
 app.use(errorsController.pageNotFound);
 
 const PORT = 3000;

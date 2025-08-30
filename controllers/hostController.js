@@ -1,5 +1,4 @@
-const fs = require('fs');
-//const { Result } = require("postcss");
+const fs = require('fs');//File System allows you to interact with the file system —  Create,read,update,delete files/Work with folders 
 const Home = require("../models/home");
 
 exports.getAddHome = (req, res, next) => {

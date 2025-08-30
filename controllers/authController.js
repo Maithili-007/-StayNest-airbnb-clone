@@ -1,6 +1,6 @@
-const { check, validationResult } = require("express-validator");
+const { check, validationResult } = require("express-validator");//validating incoming data (form inputs or API requests).
 const User = require("../models/user");
-const bcrypt = require("bcryptjs");
+const bcrypt = require("bcryptjs");//library used to hash passwords before storing them in the database
 
 exports.getLogin = (req, res, next) => {
   res.render("auth/login", {

@@ -1,5 +1,5 @@
 // External Module
-const express = require("express");
+const express = require("express");//imports the Express library 
 const hostRouter = express.Router();
 
 // Local Module
